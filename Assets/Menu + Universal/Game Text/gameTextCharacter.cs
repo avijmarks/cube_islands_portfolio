@@ -7,7 +7,7 @@ public class gameTextCharacter : MonoBehaviour {
     //make into read only field 
     public char characterID;
 
-    public GameTextController controller;
+   
 
     
 
