@@ -255,9 +255,5 @@ public class MoveControlManager : MonoBehaviour {
 			yield return null;
 		}
 	}
-	/*
-	IEnumerator IndicatorStop(){
-		
-	}
-	*/
+
 }
