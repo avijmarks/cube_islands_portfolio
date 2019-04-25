@@ -731,8 +731,8 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 54f4e77f-57b5-4acd-839d-bbc91a57762d
-  projectName: Randall's Spicy World
+  cloudProjectId: 85dd0945-5073-4572-9a07-f9b3bd4e531d
+  projectName: cube_islands
   organizationId: ajmarks
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
