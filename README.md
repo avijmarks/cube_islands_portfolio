@@ -53,4 +53,60 @@ Uses 3D alphabet object prefabs to construct string messages passed to it throug
 * Potentially a cool interactive 3D perlin cube structure spawning within the center cube
 * Menu's allowing the user to change colors in the environment
 
+## Cube Racer
+
+![](/readmeScreenshots/cube_racer2.png)
+
+Cube Racer is an in development endless runner style game in 3D space over terrain. The locomotion system in this cardboard experience was created around an idea for making flying jet-plane like experience in a surreal environment.
+
+
+### Cube Racer Locomotion
+
+<img src="readmeScreenshots/cube_racer_ui.png" width="500" >
+
+* User steers on a joystick-like pad like. The joystick allows them to turn their entire "rocket suit" using quaternions based on an indicator that moves on the joystick "pad" based on where they are looking. 
+* users can look around at their environment by quickly looking off the pad which will cause the indicator to snap back to its center position on the joystick pad.
+
+#### Relevant Scripts
+
+* `RocketJoystick.cs` on the RocketHUD empty under PlayerParent empty.
+
+#### Future Plans for Cube Racer
+* Create menu system and tutorial using GameText
+* Create dynamic terrain collider and obstacle collision
+* Create large lake tiles that will enable the game position to be rest to origin worldspace
+* Create fuel system a fuel capsules as well as stars for points
+* Stars and fuel will spawn **inside** cube obstacles requiring the player to navigate through treacherous terrain
+* Create a difficulty system
+* Feels very clunky to use in unity (its hard to move your mouse at a constant rate) but feels better once built to iphone.
+* Create more obstacle and spawning-location-organization types (current system allows for easy implementation of new obstacle types and spawn patterns such as 3d perlin noise patterns for "clouds" of smaller cubes)
+
+### Procedural Terrain
+
+Terrain used in Cube Racer scene uses a procedural low-poly terrain generator I created that uses a modified algorithm of octaves of perlin noise. A standalone way to access the terrain generator is in the `procedural test` scene in the scenes folder.
+
+* System is comprised of a `NoiseGenerator.cs` script on an empty "map generator" and a `GenDiscreteNormalMesh.cs` Script on a nested empty "Terrain".
+* The general terrain settings are set in the `NoiseGenerator.cs` inspector window. 
+* The specifics of the tile and cellsize (which are also fully customizeable) are on inspector for the `GenDiscreteNormalMesh.cs` script. 
+* If you place a `GenDiscreteNormalMesh.cs` script (and assign the proper references) on and empy and place it anywhere level with other terrain tiles connected to the same `NoiseGenerator.cs`, their terrain will line up properly with the other terrain tile based on the location of the empty -- making tile creation very very easy. 
+
+#### Noise Generator
+* It is highly customizable using the height, lacunarity (frequency of higher octaves of perlin noise), and persistance (amplitude of higher octaves). 
+* Keep in mind persistance should be a value between 0 and 1, usually on the low end. 
+* Lacunarity should be a value between 0 and 10 approximately.  
+* Creates low-poly style terrain by repitition of vertices rather than via shaders allowing for use in later generation of dynamic collider meshes that are accurate to terrain. 
+* Inspector allows (relatively) easy management/customization of different terrain height colors
+
+The customization of the NoiseGenerator inspector allows for a very wide variety of low-poly style terrain generation, even with just one color scheme. Examples below:
+
+![](/readmeScreenshots/terrain2.png)
+
+![](/readmeScreenshots/terrain1.png)
+
+![](/readmeScreenshots/terrain3.png)
+
+![](/readmeScreenshots/terrain4.png)
+
+![](/readmeScreenshots/terrain5.png)
+
 
