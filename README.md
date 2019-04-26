@@ -1,4 +1,7 @@
 # cube_islands_portfolio
+
+![](readmeScreenshots/cube_racer_gif.gif)
+
 Portfolio Project for GoogleCardboard with a menu scene and different activities through portals on islands. Currently  consists of menu and one island, CubeRacer which is an endless runner style game for cardboard. Currently working on a tutorial/menu system and dynamic collision for cuberacer 
 
 This project was loosely centered around the idea of exploring locomotion based experiences that show off the immersive value of virtual reality even on a system with incredibly limited user input, such as Google Cardboard. Currently, the entire project is usable and the games are playable, even on headsets _without_ the standard one button input functionality that comes with cardboard. 
@@ -10,6 +13,9 @@ This project was loosely centered around the idea of exploring locomotion based 
 The menu scene consists of several islands around a large cube. The goal is to plan a variety of experiences all accessible through portals on different islands around the cube. Currently, there is only the starting island, which will have a tutorial feature soon, and an island with a portal to Cube Racer (LINK HERE) (endless runner style flying game). 
 
 ### Menu Scene Locomotion
+
+![](/readmeScreenshots/menu_scene_gif.gif)
+
 <img src="readmeScreenshots/menu_scene_ui.png" width="500" >
 
 Gif/image
@@ -55,10 +61,11 @@ Uses 3D alphabet object prefabs to construct string messages passed to it throug
 
 ## Cube Racer
 
-![](/readmeScreenshots/cube_racer2.png)
+![](/readmeScreenshots/cube_racer_gif.gif)
 
 Cube Racer is an in development endless runner style game in 3D space over terrain. The locomotion system in this cardboard experience was created around an idea for making flying jet-plane like experience in a surreal environment.
 
+![](/readmeScreenshots/cube_racer_glance.gif)
 
 ### Cube Racer Locomotion
 
