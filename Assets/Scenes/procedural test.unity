@@ -244,6 +244,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
+  obstacleFactory: {fileID: 0}
   cellSize: 2
   sizeX: 100
   sizeY: 100
@@ -380,7 +381,6 @@ GameObject:
   m_Component:
   - component: {fileID: 288806357}
   - component: {fileID: 288806356}
-  - component: {fileID: 288806358}
   m_Layer: 0
   m_Name: MapGenerator
   m_TagString: Untagged
@@ -434,17 +434,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &288806358
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 288806355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2544629c4b7774b6fa6b5352a97a72e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &336657420
 GameObject:
   m_ObjectHideFlags: 0
@@ -1033,9 +1022,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
+  obstacleFactory: {fileID: 0}
   cellSize: 1
-  sizeX: 3
-  sizeY: 3
+  sizeX: 100
+  sizeY: 100
   testing: 0
   cellLoadTime: 0.1
 --- !u!23 &588834039
@@ -1520,6 +1510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
+  obstacleFactory: {fileID: 0}
   cellSize: 1
   sizeX: 3
   sizeY: 3
@@ -2089,6 +2080,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
+  obstacleFactory: {fileID: 0}
   cellSize: 1
   sizeX: 100
   sizeY: 100
@@ -2205,6 +2197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
+  obstacleFactory: {fileID: 0}
   cellSize: 1
   sizeX: 100
   sizeY: 100
@@ -2454,6 +2447,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
+  obstacleFactory: {fileID: 0}
   cellSize: 1
   sizeX: 3
   sizeY: 3
@@ -2675,6 +2669,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
+  obstacleFactory: {fileID: 0}
   cellSize: 2
   sizeX: 100
   sizeY: 100
@@ -2978,6 +2973,7 @@ MonoBehaviour:
   cont2: {fileID: 729921188}
   deadTimer: 0
   disableCont: 0
+  enableTopControl: 1
   decelerated: 0
   moveScript: {fileID: 336657423}
   indicator: {fileID: 981797187}
