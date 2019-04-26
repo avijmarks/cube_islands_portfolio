@@ -70,8 +70,12 @@ Cube Racer is an in development endless runner style game in 3D space over terra
 #### Relevant Scripts
 
 * `RocketJoystick.cs` on the RocketHUD empty under PlayerParent empty.
+* `BoundaryManager.cs` `TileManager.cs` and `TerrainChunkManager.cs` on spawner empty under playerparent. Control boundary tube pool, terrain/obstacle tile pools. 
+* `CubeFactory.cs` -- on terrain prefabs. Controls obstacle spawning and types. 
+
 
 #### Future Plans for Cube Racer
+* Make delay indicator move when user reticle re-enters joystick pad -- making looking around feel more natural and encourage players not to oversteer making them adapt to locomotion system quicker. 
 * Create menu system and tutorial using GameText
 * Create dynamic terrain collider and obstacle collision
 * Create large lake tiles that will enable the game position to be rest to origin worldspace
