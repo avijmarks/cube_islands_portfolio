@@ -1976,7 +1976,7 @@ MonoBehaviour:
   listOfCharacters_Initializer: []
   textNodePrefab: {fileID: 114308234704042346, guid: 680fdb293e15c4f5b9a33d0191cca4b8,
     type: 2}
-  buttonPadPrefab: {fileID: 1786195128373352, guid: 48ef108041b8a45608387f09bbdaf24b,
+  buttonPadPrefab: {fileID: 114394693225860190, guid: 48ef108041b8a45608387f09bbdaf24b,
     type: 2}
   gameTextSizes:
   - {x: 0.4, y: 0.3}
@@ -2138,6 +2138,10 @@ Prefab:
     - target: {fileID: 766346198, guid: 463285ecd6702471a909ba810832bf0e, type: 2}
       propertyPath: m_RootOrder
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1422168469, guid: 463285ecd6702471a909ba810832bf0e, type: 2}
+      propertyPath: vrModeOnly
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 463285ecd6702471a909ba810832bf0e, type: 2}
@@ -4647,6 +4651,10 @@ Prefab:
     - target: {fileID: 723926960, guid: 60270cf52a5e94998a5a335989159738, type: 2}
       propertyPath: maxReticleDistance
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 723926960, guid: 60270cf52a5e94998a5a335989159738, type: 2}
+      propertyPath: drawDebugRays
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60270cf52a5e94998a5a335989159738, type: 2}

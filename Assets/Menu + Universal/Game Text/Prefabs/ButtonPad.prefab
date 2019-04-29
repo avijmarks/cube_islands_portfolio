@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 33648691087416820}
   - component: {fileID: 23604334335480766}
   - component: {fileID: 65455415167115800}
-  - component: {fileID: 114849745699277694}
+  - component: {fileID: 114394693225860190}
   m_Layer: 0
   m_Name: ButtonPad
   m_TagString: Untagged
@@ -97,7 +97,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &114849745699277694
+--- !u!114 &114394693225860190
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,21 +105,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 1786195128373352}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -1862395651, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Script: {fileID: 11500000, guid: a9ed2bae916d64a5bab6406b31ebb070, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_Delegates:
-  - eventID: 0
+  - eventID: 2
     callback:
       m_PersistentCalls:
         m_Calls:
-        - m_Target: {fileID: 1181850588020494, guid: 680fdb293e15c4f5b9a33d0191cca4b8,
-            type: 2}
-          m_MethodName: 
+        - m_Target: {fileID: 114394693225860190}
+          m_MethodName: Downnnn
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: 
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
@@ -128,3 +127,4 @@ MonoBehaviour:
       m_TypeName: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI,
         Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   delegates: []
+  textStyle: 

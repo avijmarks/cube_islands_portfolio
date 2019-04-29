@@ -34,11 +34,16 @@ public class ButtonPad : EventTrigger {
         GameTextController.gameText.PointerExitButton(gameObject, textStyle);
     }
 
-    public override void OnPointerClick(PointerEventData eventData)
+    public override void OnPointerDown(PointerEventData eventData)
     {
         Debug.Log("clicked");
         base.OnPointerClick(eventData);
         trigger();
+    }
+
+    public void Downnnn()
+    {
+        Debug.Log("downnn");
     }
     
 
