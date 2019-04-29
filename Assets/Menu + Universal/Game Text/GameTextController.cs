@@ -13,7 +13,7 @@ public class GameTextController: MonoBehaviour {
     //textnode prefab for instantiation
     public TextNode textNodePrefab; 
     //buttonPad prefab for instantiation
-    public GameObject buttonPadPrefab;
+    public ButtonPad buttonPadPrefab;
 
     //x value is scale, y value is spacing
     [SerializeField] 
@@ -30,6 +30,10 @@ public class GameTextController: MonoBehaviour {
 
     //used to store styles created with CreateGameTextStyleFunction
     Dictionary<string, GameTextStyle> gameTextStyles = new Dictionary<string, GameTextStyle>();
+
+    //used to set trigger method on button click
+    public delegate void GameTextButtonTrigger();
+    
 
     public Color buttonColorPassive;
     public Color buttonColorActive;
@@ -83,9 +87,9 @@ public class GameTextController: MonoBehaviour {
         return dictionaryPrefabInitializer;
     }
 
-    
 
- 
+
+
 
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -94,7 +98,7 @@ public class GameTextController: MonoBehaviour {
 
 
     //message = self explanatory; textSize & material = choose from array in inspector; rotOffset in case instantiating object has weird rot; 
-    public TextNode CreateTextNode(string message, string style, Transform parentTransform, Vector3 positionOffset, Vector3 rotationOffset)
+    public TextNode CreateTextNode(string message, string style, Transform parentTransform, Vector3 positionOffset, Vector3 rotationOffset, GameTextButtonTrigger trigger = null)
     {
        
         //instantiate textNode ( will be parent of characters)
@@ -103,14 +107,38 @@ public class GameTextController: MonoBehaviour {
         //rotation offset used here because characters position and rotation will always be same relative to textNode, it is textNode that controls overal rotation
         nodeInstance.transform.Rotate(parentTransform.rotation.eulerAngles + rotationOffset);
 
+        nodeInstance = ChangeNodeMessage(nodeInstance, message, style, trigger);
+        return nodeInstance;
+    }
+    public TextNode CreateTextNode(string message, string style, Transform parentTransform, Vector3 positionOffset)
+    {
+
+
+        TextNode instance = CreateTextNode(message, style, parentTransform, positionOffset, Vector3.zero);
+        return instance;
+    }
+
+    //Changes message on textnode -- also used when initially creating node
+    public TextNode ChangeNodeMessage(TextNode nodeInstance, string message, string style, GameTextButtonTrigger trigger)
+    {
+        //getting rid of old text (if any
+        if (nodeInstance.GetComponentsInChildren<gameTextCharacter>().Length > 0)
+        {
+            gameTextCharacter[] previousCharacters = nodeInstance.GetComponentsInChildren<gameTextCharacter>();
+            for (int i = 0; i <= previousCharacters.Length; i++)
+            {
+                Destroy(previousCharacters[i]);
+            }
+        }
+
         char[] messageArray = message.ToCharArray();
         Vector3[] characterLocalPositions = GetCharacterPositions(nodeInstance.transform, gameTextStyles[style].textSize, messageArray);
 
-        for (int i = 0; i < messageArray.Length; i++) 
+        for (int i = 0; i < messageArray.Length; i++)
         {
             gameTextCharacter instance = Instantiate(characters[messageArray[i]], nodeInstance.transform);
             instance.transform.localPosition = characterLocalPositions[i];
-           
+
             instance.transform.Rotate(0, 90, 90);
             instance.GetComponent<MeshRenderer>().material = materials[gameTextStyles[style].material];
             instance.transform.localScale = new Vector3(gameTextStyles[style].textSize, gameTextStyles[style].textSize, gameTextStyles[style].textSize);
@@ -120,24 +148,25 @@ public class GameTextController: MonoBehaviour {
         if (gameTextStyles[style].isButton)
         {
             nodeInstance.buttonPad = Instantiate(buttonPadPrefab, nodeInstance.transform);
+            nodeInstance.buttonPad.trigger = trigger;
+            nodeInstance.buttonPad.textStyle = style;
             nodeInstance.buttonPad.transform.localPosition = new Vector3(0, 0, -(.05f * gameTextStyles[style].textSize));
 
             float charactarSpace = gameTextStyles[style].textSize * .7f;
             float X = (charactarSpace * messageArray.Length) + (.15f * charactarSpace);
             float Y = charactarSpace + (.15f * charactarSpace);
             float Z = (.05f * charactarSpace);
-
             nodeInstance.buttonPad.transform.localScale = new Vector3(X, Y, Z);
+
+            //setting trigger on instance of TextNode to be the trigger input 
+            nodeInstance.trigger = trigger;
         }
 
-        
+
+
         return nodeInstance;
     }
-    public TextNode CreateTextNode(string message, string style, Transform parentTransform, Vector3 positionOffset)
-    {
-       TextNode instance = CreateTextNode(message, style, parentTransform, positionOffset, Vector3.zero);
-       return instance;
-    }
+
 
 
 
@@ -168,11 +197,11 @@ public class GameTextController: MonoBehaviour {
         return characterPositions;
     }
 
+
     public void PointerOnButton(GameObject buttonPad, string textStyle)
     {
         StartCoroutine(ButtonHover( buttonPad, textStyle));
     }
-
     IEnumerator ButtonHover (GameObject buttonPad, string textStyle)
     {
         float vel = 0.0f;
@@ -190,7 +219,6 @@ public class GameTextController: MonoBehaviour {
     {
         StartCoroutine(ButtonHoverExit(buttonPad, textStyle));
     }
-
     IEnumerator ButtonHoverExit (GameObject buttonPad, string textStyle)
     {
         float vel = 0f;

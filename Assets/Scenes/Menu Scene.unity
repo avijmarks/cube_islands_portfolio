@@ -705,13 +705,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 136124195}
-  m_LocalRotation: {x: 0.7071068, y: -0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -0.0069, y: -0.00563, z: -0.0037}
+  m_LocalRotation: {x: 0.6082758, y: -0.36055604, z: -0.3605561, w: 0.60827565}
+  m_LocalPosition: {x: -0.00586, y: -0.0047, z: -0.00304}
   m_LocalScale: {x: -0.0011575124, y: -0.0011575122, z: -0.0011575122}
   m_Children: []
   m_Father: {fileID: 1858894464}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 28.685001, y: -90.00001, z: -90.00001}
 --- !u!114 &136124200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -973,6 +973,16 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 114308234704042346, guid: 680fdb293e15c4f5b9a33d0191cca4b8,
+        type: 2}
+      propertyPath: m_Delegates.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114308234704042346, guid: 680fdb293e15c4f5b9a33d0191cca4b8,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4822221266008010, guid: 680fdb293e15c4f5b9a33d0191cca4b8, type: 2}
       propertyPath: m_LocalPosition.x
       value: -3.6710846
@@ -1004,6 +1014,22 @@ Prefab:
     - target: {fileID: 4822221266008010, guid: 680fdb293e15c4f5b9a33d0191cca4b8, type: 2}
       propertyPath: m_RootOrder
       value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 114308234704042346, guid: 680fdb293e15c4f5b9a33d0191cca4b8,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_TypeName
+      value: UnityEngine.EventSystems.EventTrigger+TriggerEvent, UnityEngine.UI, Version=1.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      objectReference: {fileID: 0}
+    - target: {fileID: 114308234704042346, guid: 680fdb293e15c4f5b9a33d0191cca4b8,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114308234704042346, guid: 680fdb293e15c4f5b9a33d0191cca4b8,
+        type: 2}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 680fdb293e15c4f5b9a33d0191cca4b8, type: 2}
@@ -1962,6 +1988,8 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 081aaf42693d44beda8fcbce45dffa94, type: 2}
   - {fileID: 0}
   gameTextPrefabsParent: {fileID: 1711002265}
+  buttonColorPassive: {r: 0.7372549, g: 0.22352941, b: 0.38039216, a: 0}
+  buttonColorActive: {r: 0.7372549, g: 0.22352941, b: 0.38039216, a: 0.47058824}
 --- !u!1001 &581158399
 Prefab:
   m_ObjectHideFlags: 0
@@ -4618,7 +4646,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 723926960, guid: 60270cf52a5e94998a5a335989159738, type: 2}
       propertyPath: maxReticleDistance
-      value: 1.920937
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 60270cf52a5e94998a5a335989159738, type: 2}
