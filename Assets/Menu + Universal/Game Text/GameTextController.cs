@@ -31,6 +31,10 @@ public class GameTextController: MonoBehaviour {
     //used to store styles created with CreateGameTextStyleFunction
     Dictionary<string, GameTextStyle> gameTextStyles = new Dictionary<string, GameTextStyle>();
 
+    public Color buttonColorPassive;
+    public Color buttonColorActive;
+
+
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //INITIALIZATION
@@ -109,23 +113,22 @@ public class GameTextController: MonoBehaviour {
            
             instance.transform.Rotate(0, 90, 90);
             instance.GetComponent<MeshRenderer>().material = materials[gameTextStyles[style].material];
+            instance.transform.localScale = new Vector3(gameTextStyles[style].textSize, gameTextStyles[style].textSize, gameTextStyles[style].textSize);
         }
+
 
         if (gameTextStyles[style].isButton)
         {
             nodeInstance.buttonPad = Instantiate(buttonPadPrefab, nodeInstance.transform);
-            
-            float messageWorldSize = (gameTextSizes[gameTextStyles[style].textSize].x * messageArray.Length) + (gameTextSizes[gameTextStyles[style].textSize].y * (messageArray.Length - 1));
-            float buttonPadX = messageWorldSize + (2f * gameTextSizes[gameTextStyles[style].textSize].y);
-            float buttonPadY = gameTextSizes[gameTextStyles[style].textSize].x + (2f * gameTextSizes[gameTextStyles[style].textSize].y);
-            float buttonPadZ = .1f * gameTextSizes[gameTextStyles[style].textSize].x;
-            nodeInstance.buttonPad.transform.localScale = new Vector3(buttonPadX, buttonPadY, buttonPadZ);
+            nodeInstance.buttonPad.transform.localPosition = new Vector3(0, 0, -(.05f * gameTextStyles[style].textSize));
+
+            float charactarSpace = gameTextStyles[style].textSize * .7f;
+            float X = (charactarSpace * messageArray.Length) + (.15f * charactarSpace);
+            float Y = charactarSpace + (.15f * charactarSpace);
+            float Z = (.05f * charactarSpace);
+
+            nodeInstance.buttonPad.transform.localScale = new Vector3(X, Y, Z);
         }
-
-
-
-
-
 
         
         return nodeInstance;
@@ -140,16 +143,18 @@ public class GameTextController: MonoBehaviour {
 
 
     //uses textSize, messageArray.Length, and textNode position to calculate the localpositions (to textNode) where chars go (returns a vector3[] of positions) 
-    Vector3[] GetCharacterPositions(Transform nodeTransform, int textSize, char[] messageArray)
+    Vector3[] GetCharacterPositions(Transform nodeTransform, float textSize, char[] messageArray)
     {
         Vector3[] characterPositions = new Vector3[messageArray.Length];
 
         //finds entire size string would be given textScale and inbetween space then divides by total number of characters to find characterTileSize
-        float messageWorldSize = (gameTextSizes[textSize].x * messageArray.Length) + (gameTextSizes[textSize].y * (messageArray.Length - 1));
-        float characterTileSize = messageWorldSize / messageArray.Length;
+        float characterSpace = textSize * .7f;
+        float messageWorldSize = characterSpace * characterPositions.Length;
+
+
         float currentPosition;
         //initializing at first characterPosition x value
-        currentPosition = (.5f * messageWorldSize) - (.5f * characterTileSize);
+        currentPosition = (.5f * messageWorldSize) - (.5f * characterSpace);
       
         for (int i = 0; i < messageArray.Length; i++)
         {
@@ -158,47 +163,83 @@ public class GameTextController: MonoBehaviour {
             //adding to array
             characterPositions[i] = position;
             //incrementing position
-            currentPosition = currentPosition - characterTileSize;
+            currentPosition = currentPosition - characterSpace;
         }
         return characterPositions;
     }
 
+    public void PointerOnButton(GameObject buttonPad, string textStyle)
+    {
+        StartCoroutine(ButtonHover( buttonPad, textStyle));
+    }
 
+    IEnumerator ButtonHover (GameObject buttonPad, string textStyle)
+    {
+        float vel = 0.0f;
+
+        while (buttonPad.GetComponent<MeshRenderer>().material.color.a < .54f)
+        {
+            Color color = buttonPad.GetComponent<MeshRenderer>().material.color;
+            color.a = Mathf.SmoothDamp(color.a, .55f, ref vel, .02f);
+            buttonPad.GetComponent<MeshRenderer>().material.color = color;
+            yield return null;
+        }
+    }
+
+    public void PointerExitButton(GameObject buttonPad, string textStyle)
+    {
+        StartCoroutine(ButtonHoverExit(buttonPad, textStyle));
+    }
+
+    IEnumerator ButtonHoverExit (GameObject buttonPad, string textStyle)
+    {
+        float vel = 0f;
+
+        while (buttonPad.GetComponent<MeshRenderer>().material.color.a > .18)
+        {
+            Color color = buttonPad.GetComponent<MeshRenderer>().material.color;
+            color.a = Mathf.SmoothDamp(color.a, .17f, ref vel, .02f);
+            buttonPad.GetComponent<MeshRenderer>().material.color = color;
+            yield return null;
+        }
+    }
 
 
 
 
     public class GameTextStyle: MonoBehaviour 
     {
-        public int textSize;
+        public float textSize;
         public int material; 
         public string styleName;
         public bool isButton; 
         public bool lookAtPlayer;
-        public bool parent;
+        public bool isParented;
+
 
         //(may be used)only required if parent is true -- currently not used in functions
         public float scaleOffset;
+
     }
 
     //basic constructor for new text styles
-    public void NewGameTextStyle (string styleName, int textSize, int textMaterial, bool isButton, bool lookAtPlayer, bool parent)
+    public void NewGameTextStyle (string styleName, float textSize, int textMaterial, bool isButton, bool lookAtPlayer, bool isParented)
     {   
-        GameTextStyle newStyle = new GameTextStyle();
-        newStyle.styleName = styleName;
+        GameTextStyle newStyle = new GameTextStyle(); 
+        newStyle.styleName = styleName; 
         newStyle.textSize = textSize;
         newStyle.material = textMaterial;
         newStyle.isButton = isButton;
         newStyle.lookAtPlayer = lookAtPlayer;
-        newStyle.parent = parent;
+        newStyle.isParented = isParented;
 
         gameTextStyles.Add(styleName, newStyle);
     }
 
     public void CubeIslandTextStyles ()
     {
-        NewGameTextStyle("LabelText", 0, 1, false, false, false);
-        NewGameTextStyle("Button", 1, 1, true, false, false);
+        NewGameTextStyle("LabelText", .9f, 1, false, false, false);
+        NewGameTextStyle("Button", .6f, 1, true, false, false);
     }
     
 
