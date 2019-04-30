@@ -644,7 +644,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!23 &136124196
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -834,7 +834,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &174067279
 Prefab:
@@ -1282,7 +1282,7 @@ GameObject:
   - component: {fileID: 278497230}
   - component: {fileID: 278497229}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: KeepSceneViewOpen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1311,7 +1311,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &287813983
 Prefab:
@@ -2025,8 +2025,6 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 081aaf42693d44beda8fcbce45dffa94, type: 2}
   - {fileID: 0}
   gameTextPrefabsParent: {fileID: 1711002265}
-  buttonColorPassive: {r: 0.7372549, g: 0.22352941, b: 0.38039216, a: 0}
-  buttonColorActive: {r: 0.7372549, g: 0.22352941, b: 0.38039216, a: 0.47058824}
 --- !u!1001 &581158399
 Prefab:
   m_ObjectHideFlags: 0
@@ -2496,7 +2494,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4327750182813002, guid: f42f57882a98aaf4192e7f7dbe700b2a, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4327750182813002, guid: f42f57882a98aaf4192e7f7dbe700b2a, type: 2}
       propertyPath: m_LocalScale.y
@@ -2785,6 +2783,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 40
       objectReference: {fileID: 0}
+    - target: {fileID: 1808499483408264, guid: 1a9314bcf16d64842906796e67d8f04f, type: 2}
+      propertyPath: m_Name
+      value: SPACE
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1a9314bcf16d64842906796e67d8f04f, type: 2}
   m_IsPrefabAsset: 0
@@ -2946,6 +2948,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682f2a694f3014505a038e29690a9f6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerParent: {fileID: 1442630897}
 --- !u!1001 &1076582543
 Prefab:
   m_ObjectHideFlags: 0
@@ -3446,7 +3449,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1251893701}
   m_LocalRotation: {x: -0, y: 0.99603087, z: -0, w: 0.08900913}
-  m_LocalPosition: {x: 3.2, y: -18.61, z: 47.2}
+  m_LocalPosition: {x: 31.9, y: 2.8, z: -17.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1442630899}
@@ -5057,7 +5060,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e1360c70e9fb7d24dacb61b1d7d97247, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: e1360c70e9fb7d24dacb61b1d7d97247, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

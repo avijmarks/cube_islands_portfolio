@@ -5,10 +5,10 @@ using UnityEngine;
 public class GameText: MonoBehaviour {
 
     [SerializeField]
-    gameTextCharacter[] listOfCharacters_Initializer;
+    GameTextCharacter[] listOfCharacters_Initializer;
 
     
-    Dictionary<char, gameTextCharacter> characters = new Dictionary<char, gameTextCharacter>();
+    Dictionary<char, GameTextCharacter> characters = new Dictionary<char, GameTextCharacter>();
 
     //scales text size because characters dont align with scaling
     public float textSizeScaling = .7f;
@@ -32,9 +32,6 @@ public class GameText: MonoBehaviour {
     //used to set trigger method on button click
     public delegate void GameTextButtonTrigger();
 
-    public Color buttonColorPassive;
-    public Color buttonColorActive;
-
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //GAMESTYLE CLASS AND CONSTRUCTOR
@@ -45,6 +42,8 @@ public class GameText: MonoBehaviour {
     {
         NewGameTextStyle("LabelText", .9f, 1, false, false, false);
         NewGameTextStyle("Button", .6f, 1, true, false, false);
+        NewGameTextStyle("HUDMenuLabel", .1f, 1, false, false, true);
+        NewGameTextStyle("HUDButton", .07f, 1, true,false,true);
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -100,7 +99,7 @@ public class GameText: MonoBehaviour {
             //destroy this instance text here.
         }
 
-        gameTextCharacter[] initializer = InitialArray();
+        GameTextCharacter[] initializer = InitialArray();
         for (int i = 0; i < initializer.Length; i++)
         {
             characters.Add(initializer[i].characterID, initializer[i]);
@@ -108,12 +107,12 @@ public class GameText: MonoBehaviour {
         MyTextStyles();
     }
 
-    gameTextCharacter[] InitialArray()
+    GameTextCharacter[] InitialArray()
     {
         //can remove this line and array when no longer want to see autopopulate characters in inspector
-        listOfCharacters_Initializer = gameTextPrefabsParent.GetComponentsInChildren<gameTextCharacter>();
+        listOfCharacters_Initializer = gameTextPrefabsParent.GetComponentsInChildren<GameTextCharacter>();
 
-        gameTextCharacter[] dictionaryPrefabInitializer = gameTextPrefabsParent.GetComponentsInChildren<gameTextCharacter>();
+        GameTextCharacter[] dictionaryPrefabInitializer = gameTextPrefabsParent.GetComponentsInChildren<GameTextCharacter>();
         return dictionaryPrefabInitializer;
     }
 
@@ -124,14 +123,26 @@ public class GameText: MonoBehaviour {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     //message = self explanatory; textSize & material = choose from array in inspector; rotOffset in case instantiating object has weird rot; 
-    public TextNode CreateTextNode(string message, string style, Transform parentTransform, Vector3 positionOffset, Vector3 rotationOffset, GameTextButtonTrigger trigger = null)
+    public TextNode CreateTextNode(string message, string style, Transform objectTextIsOn, Vector3 positionOffset, Vector3 rotationOffset, Transform parentTransform = null, GameTextButtonTrigger trigger = null)
     {
        
         //instantiate textNode ( will be parent of characters)
         TextNode nodeInstance = Instantiate(textNodePrefab);
-        nodeInstance.transform.position = parentTransform.position + positionOffset;
+        
         //rotation offset used here because characters position and rotation will always be same relative to textNode, it is textNode that controls overal rotation
-        nodeInstance.transform.Rotate(parentTransform.rotation.eulerAngles + rotationOffset);
+        nodeInstance.transform.Rotate(objectTextIsOn.rotation.eulerAngles + rotationOffset);
+
+        if (gameTextStyles[style].isParented == true)
+        {
+            nodeInstance.transform.SetParent(parentTransform);
+            positionOffset = objectTextIsOn.transform.TransformPoint(positionOffset);
+            positionOffset = parentTransform.transform.InverseTransformPoint(positionOffset);
+            nodeInstance.transform.localPosition = positionOffset;
+            
+        } else {
+            nodeInstance.transform.position = objectTextIsOn.transform.TransformPoint(positionOffset);
+            
+        }
 
         nodeInstance = ChangeNodeMessage(nodeInstance, message, style, trigger);
         return nodeInstance;
@@ -149,9 +160,9 @@ public class GameText: MonoBehaviour {
     public TextNode ChangeNodeMessage(TextNode nodeInstance, string message, string style, GameTextButtonTrigger trigger)
     {
         //getting rid of old text/button (if any)
-        if (nodeInstance.GetComponentsInChildren<gameTextCharacter>().Length > 0)
+        if (nodeInstance.GetComponentsInChildren<GameTextCharacter>().Length > 0)
         {
-            gameTextCharacter[] previousCharacters = nodeInstance.GetComponentsInChildren<gameTextCharacter>();
+            GameTextCharacter[] previousCharacters = nodeInstance.GetComponentsInChildren<GameTextCharacter>();
             for (int i = 0; i <= previousCharacters.Length; i++)
             {
                 Destroy(previousCharacters[i]);
@@ -170,7 +181,7 @@ public class GameText: MonoBehaviour {
 
         for (int i = 0; i < messageArray.Length; i++)
         {
-            gameTextCharacter instance = Instantiate(characters[messageArray[i]], nodeInstance.transform);
+            GameTextCharacter instance = Instantiate(characters[messageArray[i]], nodeInstance.transform);
             instance.transform.localPosition = characterLocalPositions[i];
 
             instance.transform.Rotate(0, 90, 90);

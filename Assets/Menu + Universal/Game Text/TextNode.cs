@@ -8,7 +8,7 @@ public class TextNode : EventTrigger {
     public string textStyle;
     public ButtonPad buttonPad;
     //should go on buttonpad
-    public GameTextController.GameTextButtonTrigger trigger;
+    public GameText.GameTextButtonTrigger trigger;
 
 
 
