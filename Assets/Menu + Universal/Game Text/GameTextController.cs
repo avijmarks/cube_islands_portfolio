@@ -2,23 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameTextController: MonoBehaviour {
+public class GameText: MonoBehaviour {
 
     [SerializeField]
     gameTextCharacter[] listOfCharacters_Initializer;
 
-
+    
     Dictionary<char, gameTextCharacter> characters = new Dictionary<char, gameTextCharacter>();
 
+    //scales text size because characters dont align with scaling
+    public float textSizeScaling = .7f;
     //textnode prefab for instantiation
     public TextNode textNodePrefab; 
     //buttonPad prefab for instantiation
     public ButtonPad buttonPadPrefab;
-
-    //x value is scale, y value is spacing
-    [SerializeField] 
-    Vector2[] gameTextSizes;
-    
 
     [SerializeField]
     Material[] materials;
@@ -26,20 +23,58 @@ public class GameTextController: MonoBehaviour {
     //empty character prefabs are nested under for initialization
     public GameObject gameTextPrefabsParent;
 
-    public static GameTextController gameText = null;
+    //SINGLETON
+    public static GameText generator = null;
 
     //used to store styles created with CreateGameTextStyleFunction
     Dictionary<string, GameTextStyle> gameTextStyles = new Dictionary<string, GameTextStyle>();
 
     //used to set trigger method on button click
     public delegate void GameTextButtonTrigger();
-    
 
     public Color buttonColorPassive;
     public Color buttonColorActive;
 
 
-    
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //GAMESTYLE CLASS AND CONSTRUCTOR
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    //ADD CUSTOM TEXT STYLES HERE
+    void MyTextStyles()
+    {
+        NewGameTextStyle("LabelText", .9f, 1, false, false, false);
+        NewGameTextStyle("Button", .6f, 1, true, false, false);
+    }
+
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    public class GameTextStyle : MonoBehaviour
+    {
+        public float textSize;
+        public int material;
+        public string styleName;
+        public bool isButton;
+        public bool lookAtPlayer;
+        public bool isParented;
+    }
+
+    //basic constructor for new text styles
+    public void NewGameTextStyle(string styleName, float textSize, int textMaterial, bool isButton, bool lookAtPlayer, bool isParented)
+    {
+        GameTextStyle newStyle = new GameTextStyle();
+        newStyle.styleName = styleName;
+        newStyle.textSize = textSize;
+        newStyle.material = textMaterial;
+        newStyle.isButton = isButton;
+        newStyle.lookAtPlayer = lookAtPlayer;
+        newStyle.isParented = isParented;
+
+        gameTextStyles.Add(styleName, newStyle);
+    }
+
+
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //INITIALIZATION
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -57,22 +92,20 @@ public class GameTextController: MonoBehaviour {
     //creates a dictionary for us of alphabet prefabs and characters by accessing each index of prefab array and finding out its string character variable
     void Awake()
     {
-        if (gameText == null)
+        if (generator == null)
         {
-            gameText = this; 
-        } else if (gameText != null)
+            generator = this; 
+        } else if (generator != null)
         {
             //destroy this instance text here.
         }
 
         gameTextCharacter[] initializer = InitialArray();
-
         for (int i = 0; i < initializer.Length; i++)
         {
             characters.Add(initializer[i].characterID, initializer[i]);
         }
-
-        CubeIslandTextStyles();
+        MyTextStyles();
     }
 
     gameTextCharacter[] InitialArray()
@@ -80,22 +113,15 @@ public class GameTextController: MonoBehaviour {
         //can remove this line and array when no longer want to see autopopulate characters in inspector
         listOfCharacters_Initializer = gameTextPrefabsParent.GetComponentsInChildren<gameTextCharacter>();
 
-        
-
         gameTextCharacter[] dictionaryPrefabInitializer = gameTextPrefabsParent.GetComponentsInChildren<gameTextCharacter>();
-
         return dictionaryPrefabInitializer;
     }
-
-
-
 
 
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //CREATING GAMETEXT
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
     //message = self explanatory; textSize & material = choose from array in inspector; rotOffset in case instantiating object has weird rot; 
     public TextNode CreateTextNode(string message, string style, Transform parentTransform, Vector3 positionOffset, Vector3 rotationOffset, GameTextButtonTrigger trigger = null)
@@ -118,10 +144,11 @@ public class GameTextController: MonoBehaviour {
         return instance;
     }
 
+
     //Changes message on textnode -- also used when initially creating node
     public TextNode ChangeNodeMessage(TextNode nodeInstance, string message, string style, GameTextButtonTrigger trigger)
     {
-        //getting rid of old text (if any
+        //getting rid of old text/button (if any)
         if (nodeInstance.GetComponentsInChildren<gameTextCharacter>().Length > 0)
         {
             gameTextCharacter[] previousCharacters = nodeInstance.GetComponentsInChildren<gameTextCharacter>();
@@ -129,7 +156,14 @@ public class GameTextController: MonoBehaviour {
             {
                 Destroy(previousCharacters[i]);
             }
+            if (nodeInstance.GetComponentsInChildren<ButtonPad>().Length > 0)
+            {
+                ButtonPad[] oldButtons = nodeInstance.GetComponentsInChildren<ButtonPad>();
+                Destroy(oldButtons[0]);
+            }
         }
+
+        nodeInstance.textStyle = style;
 
         char[] messageArray = message.ToCharArray();
         Vector3[] characterLocalPositions = GetCharacterPositions(nodeInstance.transform, gameTextStyles[style].textSize, messageArray);
@@ -147,20 +181,23 @@ public class GameTextController: MonoBehaviour {
 
         if (gameTextStyles[style].isButton)
         {
+            float buttonScale = .3f;
             nodeInstance.buttonPad = Instantiate(buttonPadPrefab, nodeInstance.transform);
             nodeInstance.buttonPad.trigger = trigger;
             nodeInstance.buttonPad.textStyle = style;
             nodeInstance.buttonPad.transform.localPosition = new Vector3(0, 0, -(.05f * gameTextStyles[style].textSize));
 
             float charactarSpace = gameTextStyles[style].textSize * .7f;
-            float X = (charactarSpace * messageArray.Length) + (.15f * charactarSpace);
-            float Y = charactarSpace + (.15f * charactarSpace);
+            float X = (charactarSpace * messageArray.Length) + (buttonScale * charactarSpace);
+            float Y = charactarSpace + (buttonScale * charactarSpace);
             float Z = (.05f * charactarSpace);
             nodeInstance.buttonPad.transform.localScale = new Vector3(X, Y, Z);
 
-            //setting trigger on instance of TextNode to be the trigger input 
+            //setting properties on TextNode instance
             nodeInstance.trigger = trigger;
+
         }
+        //setting style property on TextNode instance
 
 
 
@@ -168,16 +205,13 @@ public class GameTextController: MonoBehaviour {
     }
 
 
-
-
-
     //uses textSize, messageArray.Length, and textNode position to calculate the localpositions (to textNode) where chars go (returns a vector3[] of positions) 
     Vector3[] GetCharacterPositions(Transform nodeTransform, float textSize, char[] messageArray)
     {
         Vector3[] characterPositions = new Vector3[messageArray.Length];
 
-        //finds entire size string would be given textScale and inbetween space then divides by total number of characters to find characterTileSize
-        float characterSpace = textSize * .7f;
+
+        float characterSpace = textSize * textSizeScaling;
         float messageWorldSize = characterSpace * characterPositions.Length;
 
 
@@ -197,78 +231,100 @@ public class GameTextController: MonoBehaviour {
         return characterPositions;
     }
 
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    //BUTTON EVENTS
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    public void PointerOnButton(GameObject buttonPad, string textStyle)
+    public void PointerOnButton(ButtonPad buttonInstance)
     {
-        StartCoroutine(ButtonHover( buttonPad, textStyle));
+        StartCoroutine(ButtonHover(buttonInstance)); 
     }
-    IEnumerator ButtonHover (GameObject buttonPad, string textStyle)
+    IEnumerator ButtonHover (ButtonPad buttonInstance)
     {
+        //for node size
         float vel = 0.0f;
 
-        while (buttonPad.GetComponent<MeshRenderer>().material.color.a < .54f)
+        //for node movement
+        float moveVel = 0.0f;
+        float moveSpeed = 4.0f;
+        float startZPos = buttonInstance.transform.parent.transform.localPosition.z;
+        float targetPos = startZPos + ((gameTextStyles[buttonInstance.textStyle].textSize * textSizeScaling) * .3f);
+
+        while (!Mathf.Approximately(buttonInstance.transform.parent.transform.position.z, targetPos))
         {
-            Color color = buttonPad.GetComponent<MeshRenderer>().material.color;
+            Color color = buttonInstance.GetComponent<MeshRenderer>().material.color;
             color.a = Mathf.SmoothDamp(color.a, .55f, ref vel, .02f);
-            buttonPad.GetComponent<MeshRenderer>().material.color = color;
+            buttonInstance.GetComponent<MeshRenderer>().material.color = color;
+
+            float newPosZ = buttonInstance.transform.parent.transform.localPosition.z;
+            newPosZ = Mathf.SmoothDamp(newPosZ, targetPos, ref moveVel, moveSpeed * Time.deltaTime);
+            Vector3 newPos = new Vector3(buttonInstance.transform.parent.transform.localPosition.x, buttonInstance.transform.parent.transform.localPosition.y, newPosZ);
+            buttonInstance.transform.parent.transform.localPosition = newPos;
+            
             yield return null;
+
         }
     }
 
-    public void PointerExitButton(GameObject buttonPad, string textStyle)
+    public void PointerExitButton(ButtonPad buttonInstance) 
     {
-        StartCoroutine(ButtonHoverExit(buttonPad, textStyle));
+        StartCoroutine(ButtonHoverExit(buttonInstance));
     }
-    IEnumerator ButtonHoverExit (GameObject buttonPad, string textStyle)
+    IEnumerator ButtonHoverExit (ButtonPad buttonInstance)
     {
+        //for node size
         float vel = 0f;
 
-        while (buttonPad.GetComponent<MeshRenderer>().material.color.a > .18)
+        //for node movement
+        float moveVel = 0.0f;
+        float moveSpeed = 4.0f;
+        float startZPos = buttonInstance.transform.parent.transform.localPosition.z;
+        float targetPos = startZPos - ((gameTextStyles[buttonInstance.textStyle].textSize * textSizeScaling) * .3f);
+        while (!Mathf.Approximately(buttonInstance.transform.parent.transform.position.z, targetPos))
         {
-            Color color = buttonPad.GetComponent<MeshRenderer>().material.color;
+            Color color = buttonInstance.GetComponent<MeshRenderer>().material.color;
             color.a = Mathf.SmoothDamp(color.a, .17f, ref vel, .02f);
-            buttonPad.GetComponent<MeshRenderer>().material.color = color;
+            buttonInstance.GetComponent<MeshRenderer>().material.color = color;
+
+            float newPosZ = buttonInstance.transform.parent.transform.localPosition.z;
+            newPosZ = Mathf.SmoothDamp(newPosZ, targetPos, ref moveVel, moveSpeed * Time.deltaTime);
+            Vector3 newPos = new Vector3(buttonInstance.transform.parent.transform.localPosition.x, buttonInstance.transform.parent.transform.localPosition.y, newPosZ);
+            buttonInstance.transform.parent.transform.localPosition = newPos;
+
             yield return null;
         }
     }
 
-
-
-
-    public class GameTextStyle: MonoBehaviour 
+    public void GameTextButtonClick (ButtonPad buttonInstance)
     {
-        public float textSize;
-        public int material; 
-        public string styleName;
-        public bool isButton; 
-        public bool lookAtPlayer;
-        public bool isParented;
-
-
-        //(may be used)only required if parent is true -- currently not used in functions
-        public float scaleOffset;
-
+        StartCoroutine(TextButtonClick(buttonInstance));
     }
-
-    //basic constructor for new text styles
-    public void NewGameTextStyle (string styleName, float textSize, int textMaterial, bool isButton, bool lookAtPlayer, bool isParented)
-    {   
-        GameTextStyle newStyle = new GameTextStyle(); 
-        newStyle.styleName = styleName; 
-        newStyle.textSize = textSize;
-        newStyle.material = textMaterial;
-        newStyle.isButton = isButton;
-        newStyle.lookAtPlayer = lookAtPlayer;
-        newStyle.isParented = isParented;
-
-        gameTextStyles.Add(styleName, newStyle);
-    }
-
-    public void CubeIslandTextStyles ()
+    IEnumerator TextButtonClick (ButtonPad buttonInstance) 
     {
-        NewGameTextStyle("LabelText", .9f, 1, false, false, false);
-        NewGameTextStyle("Button", .6f, 1, true, false, false);
+        float speed = 2.0f;
+        float targetScale = .09f;
+        float vel = 0f;
+        while (buttonInstance.transform.parent.transform.localScale.x >.1)
+        {
+            Vector3 newScale = buttonInstance.transform.parent.transform.localScale;
+            newScale.x = Mathf.SmoothDamp(newScale.x, targetScale, ref vel, speed * Time.deltaTime);
+            newScale.y = Mathf.SmoothDamp(newScale.y, targetScale, ref vel, speed * Time.deltaTime);
+            buttonInstance.transform.parent.transform.localScale = newScale;
+            yield return null;
+        }
+        //stopping all coroutines to prevent errors in case hover or exit animation still running (for now)
+        StopAllCoroutines();
+        buttonInstance.trigger();
     }
+
+    
+
+
+
+
+
+
+  
     
 
 

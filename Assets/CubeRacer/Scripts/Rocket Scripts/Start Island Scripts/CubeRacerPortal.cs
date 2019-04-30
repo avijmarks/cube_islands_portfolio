@@ -8,7 +8,7 @@ public class CubeRacerPortal : MonoBehaviour {
 
     private void Start()
     {
-        GameTextController.gameText.CreateTextNode("CUBE~RACER", "LabelText", gameObject.transform.parent, new Vector3(0f, 2f, 0f), new Vector3(-90f, 0f, -47f));     
+        GameTextController.gameText.CreateTextNode("CUBE RACER", "LabelText", gameObject.transform.parent, new Vector3(0f, 3f, 0f), new Vector3(-90, 0, 0));     
     }
 
     void OnTriggerEnter (){
