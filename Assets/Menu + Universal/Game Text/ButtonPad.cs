@@ -8,6 +8,8 @@ public class ButtonPad : EventTrigger {
     public string textStyle;
     public GameText.GameTextButtonTrigger trigger;
 
+    public TextNode node;
+
 
     public override void OnPointerEnter(PointerEventData eventData)
     {

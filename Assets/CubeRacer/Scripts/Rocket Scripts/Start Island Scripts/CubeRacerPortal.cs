@@ -23,9 +23,16 @@ public class CubeRacerPortal : MonoBehaviour {
         if (buffer == false)
         {
             buffer=true;
-            textNodes.Add(GameText.generator.CreateTextNode("TELEPORT TO CUBERACER", "HUDMenuLabel", mainCamera.transform, new Vector3(0f,.3f,1.5f), new Vector3(0f, 180f, 0f), playerParent.transform));
-            textNodes.Add(GameText.generator.CreateTextNode("NO", "HUDButton", mainCamera.transform,  new Vector3(.3f, -.3f, 1.5f), new Vector3(0f, 180f, 0f), playerParent.transform, DestroyAllActiveNodes));
-            textNodes.Add(GameText.generator.CreateTextNode("YES", "HUDButton", mainCamera.transform, new Vector3(-.3f, -.3f, 1.5f), new Vector3(0f, 180f, 0f), playerParent.transform, GoToCubeRacer));
+
+            Vector3 rot = new Vector3(mainCamera.transform.rotation.eulerAngles.x, mainCamera.transform.rotation.eulerAngles.y + 180f, 
+                        mainCamera.transform.rotation.eulerAngles.z);
+
+            textNodes.Add(GameText.generator.CreateTextNode("TELEPORT TO CUBERACER", "HUDMenuLabel", playerParent.transform, 
+                        mainCamera.transform.TransformDirection(0f,.3f,1.5f), rot));
+            textNodes.Add(GameText.generator.CreateTextNode("NO", "HUDButton", playerParent.transform,  mainCamera.transform.TransformDirection(.3f, -.3f, 1.5f), 
+                        rot, DestroyAllActiveNodes));  
+            textNodes.Add(GameText.generator.CreateTextNode("YES", "HUDButton", playerParent.transform, mainCamera.transform.TransformDirection(-.3f, -.3f, 1.5f), 
+                        rot, GoToCubeRacer));
         }
     }
     void GoToCubeRacer ()
@@ -40,7 +47,6 @@ public class CubeRacerPortal : MonoBehaviour {
             Destroy(textNodes[i].gameObject);
             textNodes.Remove(textNodes[i]);
         }
-        Destroy(this.gameObject);
     }
     
 

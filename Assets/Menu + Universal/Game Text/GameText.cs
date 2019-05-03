@@ -123,24 +123,22 @@ public class GameText: MonoBehaviour {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     //message = self explanatory; textSize & material = choose from array in inspector; rotOffset in case instantiating object has weird rot; 
-    public TextNode CreateTextNode(string message, string style, Transform objectTextIsOn, Vector3 positionOffset, Vector3 rotationOffset, Transform parentTransform = null, GameTextButtonTrigger trigger = null)
+    public TextNode CreateTextNode(string message, string style, Transform parentTransform, Vector3 positionOffset, Vector3 rotationOffset, GameTextButtonTrigger trigger = null)
     {
        
         //instantiate textNode ( will be parent of characters)
         TextNode nodeInstance = Instantiate(textNodePrefab);
         
         //rotation offset used here because characters position and rotation will always be same relative to textNode, it is textNode that controls overal rotation
-        nodeInstance.transform.Rotate(objectTextIsOn.rotation.eulerAngles + rotationOffset);
+        nodeInstance.transform.Rotate(parentTransform.rotation.eulerAngles + rotationOffset);
 
         if (gameTextStyles[style].isParented == true)
         {
             nodeInstance.transform.SetParent(parentTransform);
-            positionOffset = objectTextIsOn.transform.TransformPoint(positionOffset);
-            positionOffset = parentTransform.transform.InverseTransformPoint(positionOffset);
             nodeInstance.transform.localPosition = positionOffset;
             
         } else {
-            nodeInstance.transform.position = objectTextIsOn.transform.TransformPoint(positionOffset);
+            nodeInstance.transform.position = parentTransform.transform.TransformPoint(positionOffset);
             
         }
 
@@ -196,6 +194,7 @@ public class GameText: MonoBehaviour {
             nodeInstance.buttonPad = Instantiate(buttonPadPrefab, nodeInstance.transform);
             nodeInstance.buttonPad.trigger = trigger;
             nodeInstance.buttonPad.textStyle = style;
+            nodeInstance.buttonPad.node = nodeInstance;
             nodeInstance.buttonPad.transform.localPosition = new Vector3(0, 0, -(.05f * gameTextStyles[style].textSize));
 
             float charactarSpace = gameTextStyles[style].textSize * .7f;
@@ -206,7 +205,6 @@ public class GameText: MonoBehaviour {
 
             //setting properties on TextNode instance
             nodeInstance.trigger = trigger;
-
         }
         //setting style property on TextNode instance
 
@@ -258,19 +256,28 @@ public class GameText: MonoBehaviour {
         //for node movement
         float moveVel = 0.0f;
         float moveSpeed = 4.0f;
-        float startZPos = buttonInstance.transform.parent.transform.localPosition.z;
-        float targetPos = startZPos + ((gameTextStyles[buttonInstance.textStyle].textSize * textSizeScaling) * .3f);
+        float current = 0f;
+        float target = .25f * gameTextStyles[buttonInstance.textStyle].textSize;
+        
+        Vector3 newPos;
 
-        while (!Mathf.Approximately(buttonInstance.transform.parent.transform.position.z, targetPos))
+        //changes color and moves button vector3.forward on "mouseover" (uses SmoothDamp)
+        while (current < target-.01f)
         {
             Color color = buttonInstance.GetComponent<MeshRenderer>().material.color;
             color.a = Mathf.SmoothDamp(color.a, .55f, ref vel, .02f);
             buttonInstance.GetComponent<MeshRenderer>().material.color = color;
+            
+        
+            current = Mathf.SmoothDamp(current, target, ref moveVel, moveSpeed * Time.deltaTime);
+            
+            
+            
+            
+            buttonInstance.node.transform.Translate(0f, 0f, current);
+            
 
-            float newPosZ = buttonInstance.transform.parent.transform.localPosition.z;
-            newPosZ = Mathf.SmoothDamp(newPosZ, targetPos, ref moveVel, moveSpeed * Time.deltaTime);
-            Vector3 newPos = new Vector3(buttonInstance.transform.parent.transform.localPosition.x, buttonInstance.transform.parent.transform.localPosition.y, newPosZ);
-            buttonInstance.transform.parent.transform.localPosition = newPos;
+           
             
             yield return null;
 
@@ -289,18 +296,20 @@ public class GameText: MonoBehaviour {
         //for node movement
         float moveVel = 0.0f;
         float moveSpeed = 4.0f;
-        float startZPos = buttonInstance.transform.parent.transform.localPosition.z;
-        float targetPos = startZPos - ((gameTextStyles[buttonInstance.textStyle].textSize * textSizeScaling) * .3f);
-        while (!Mathf.Approximately(buttonInstance.transform.parent.transform.position.z, targetPos))
+        float current = 0f;
+        float target = .25f * gameTextStyles[buttonInstance.textStyle].textSize;
+        while (current < target-.01f)
         {
             Color color = buttonInstance.GetComponent<MeshRenderer>().material.color;
             color.a = Mathf.SmoothDamp(color.a, .17f, ref vel, .02f);
             buttonInstance.GetComponent<MeshRenderer>().material.color = color;
 
-            float newPosZ = buttonInstance.transform.parent.transform.localPosition.z;
-            newPosZ = Mathf.SmoothDamp(newPosZ, targetPos, ref moveVel, moveSpeed * Time.deltaTime);
-            Vector3 newPos = new Vector3(buttonInstance.transform.parent.transform.localPosition.x, buttonInstance.transform.parent.transform.localPosition.y, newPosZ);
-            buttonInstance.transform.parent.transform.localPosition = newPos;
+            current = Mathf.SmoothDamp(current, target, ref moveVel, moveSpeed * Time.deltaTime);
+            
+            
+            
+            
+            buttonInstance.node.transform.Translate(0f, 0f, -current);
 
             yield return null;
         }
