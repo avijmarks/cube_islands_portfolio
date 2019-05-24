@@ -49,9 +49,9 @@ Uses 3D alphabet object prefabs to construct string messages passed to it throug
 * can easily be adapted to another project, all that is need is any alphabet asset package, `GameText.cs`, `TextNode.cs`, `GameTextCharacter.cs`, and `ButtonPad.cs`/the buttonpad prefab -- TextNode prefab can be any empty with `TextNode.cs` on it and is just the "anchor" for the characters instantiated.
 
 #### Future Plans for Game Text
-* light weight/portable menu system where "text nodes" (empties with textcharacter prefabs as children) can function as buttons, text, and be set to do a variety of UI style interactions 
-* Create types of `GameText` you can create with preset materials and sizes from the arrays in `GameTextController` to simply function calls
-* Full menus could be created just with button/nonbutton types of textnodes and position offsets from a singlescript very easily
+* LookAtPlayer feature
+* HUDText feature
+
 
 
 ### Future Plans for Menu Scene
