@@ -36,20 +36,22 @@ The locomotion system used in the menu is based around allowing users to "fly" a
 
 
 
-### Game Text
+### Game Text 1.0
 <img src="readmeScreenshots/gametext_portal.png" width="500" >
 
 Uses 3D alphabet object prefabs to construct string messages passed to it through a function on a (static) singlet of the class `GameTextController`.
-* currently instantiates from references to all children of an empty in the scene, going to be changed to an array with just a reference to prefabs in assets folder
-* returns an empty that is the **parent** of the character prefabs of the message passed to it, this empty can then be moved etc
-* can easily customize material, prefab size, and spacing between characters in `GameTextController.cs` inspector
-* adaptable rotation and location offsets to parent on `GameController.gameText.CreateTextNode` function
-* can easily be adapted to another project, all that is need is any alphabet asset set, `GameTextController.cs`, and `GameTextCharacter.cs` -- TextNode reference can be any empty and is just the "anchor" for the characters instantiated.
+* `CreateNode` returns an empty that is the **parent** of the character prefabs of the message passed to it
+* TextNodes must be created in reference to an object in the scene that you would like the text to be near or attached to
+* `GameTextStyle` class on singlet has a constructor that can be used to create preset gameTextstyles from anywhere in the code that can be used to easily create multiple nodes with similar attributes.
+* attributes of GameText that can only be set via its GameTextStyle include isParented (whether its parented to the object created in reference to), isButton (creates a button background on the text for a visually different style and animates the button on pointer hover and pointer click), lookAtPlayer (self explanatory -- under development), and isHUD (under development -- will rotate the HUD text if the orientation of the player is such that they cannot see it). 
+* Nodes' message, textsize, material, and even the GameTextStyle used can be altered at runtime even after creating the node for the easy creation of tutorials and other interactive elements. This allows you to re-use the same node for a variety of purposes rather than having to generate a completely new one. 
+* adaptable rotation and location offsets to parent when creating nodes. 
+* can easily be adapted to another project, all that is need is any alphabet asset package, `GameText.cs`, `TextNode.cs`, `GameTextCharacter.cs`, and `ButtonPad.cs`/the buttonpad prefab -- TextNode prefab can be any empty with `TextNode.cs` on it and is just the "anchor" for the characters instantiated.
 
 #### Future Plans for Game Text
-* Going to be developed into a full light weight/portable (hopefully) menu system where text nodes can function as buttons with an on pointer enter "animation" and an on pointer click effect (starting the game etc)
-* Create types of `GameText` you can create with preset materials and sizes from the arrays in `GameTextController` to simply function calls
-* Full menus could be created just with button/nonbutton types of textnodes and position offsets from a singlescript very easily
+* LookAtPlayer feature
+* HUDText feature
+
 
 
 ### Future Plans for Menu Scene
