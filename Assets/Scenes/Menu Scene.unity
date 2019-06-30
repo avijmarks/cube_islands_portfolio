@@ -644,7 +644,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!23 &136124196
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -705,13 +705,13 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 136124195}
-  m_LocalRotation: {x: 0.6082758, y: -0.36055604, z: -0.3605561, w: 0.60827565}
-  m_LocalPosition: {x: -0.00586, y: -0.0047, z: -0.00304}
+  m_LocalRotation: {x: 0.33515924, y: 0.6226301, z: 0.6226303, w: 0.33515912}
+  m_LocalPosition: {x: -0.07874, y: -0.02001, z: -0.0276}
   m_LocalScale: {x: -0.0011575124, y: -0.0011575122, z: -0.0011575122}
   m_Children: []
   m_Father: {fileID: 1858894464}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 28.685001, y: -90.00001, z: -90.00001}
+  m_LocalEulerAnglesHint: {x: 213.413, y: -90, z: -90}
 --- !u!114 &136124200
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1287,7 +1287,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &278497229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2041,6 +2041,10 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 081aaf42693d44beda8fcbce45dffa94, type: 2}
   - {fileID: 0}
   gameTextPrefabsParent: {fileID: 1711002265}
+  style_LabelText: {fileID: 0}
+  style_Button: {fileID: 0}
+  style_HUDMenuLabel: {fileID: 0}
+  style_HUDButton: {fileID: 0}
 --- !u!1001 &581158399
 Prefab:
   m_ObjectHideFlags: 0
@@ -2959,7 +2963,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1069534685}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 682f2a694f3014505a038e29690a9f6d, type: 3}
   m_Name: 
@@ -4010,7 +4014,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1629857930}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Portal_CubeRacer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

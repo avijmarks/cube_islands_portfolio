@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Threading;
+
 
 [RequireComponent(typeof(MeshRenderer))]
 public class GenDiscreteNormMesh : MonoBehaviour {
@@ -8,9 +10,6 @@ public class GenDiscreteNormMesh : MonoBehaviour {
 	Mesh mesh;
 	MeshRenderer meshRenderer;
 	public NoiseGenerator noiseGenerator;
-
-    //for spawning obstacles on terrain move etc
-    public CubeFactory obstacleFactory;
 
 	//mesh arrays
 	Vector3[] vertices;
@@ -28,12 +27,21 @@ public class GenDiscreteNormMesh : MonoBehaviour {
 	//not used yet
 	public float cellLoadTime = .1f;
 
+	//array of Obstacle arrays containing references to actual obstacles above terrain tile -- sent to ObstacleFactory for spawning
+	Obstacle[][] obstacles;
+	public ObstacleFactory obstacleFactory;
+
+	Thread threadForTerrainGen;
+
+	
+
 
 
 	//assigning mesh
 	void Awake () {
 		mesh = GetComponent<MeshFilter> ().mesh;
 		meshRenderer = GetComponent<MeshRenderer> ();
+		obstacles = obstacleFactory.GetObstacleArray();
 	}
 
 
@@ -43,23 +51,44 @@ public class GenDiscreteNormMesh : MonoBehaviour {
             MakePlane();
         }
         //replace with function called when plane is spawned/moved
-
-
     }
 
+	public void GenObstacles (Vector3 location)
+	{
+		Vector3 obstacleFactoryLocation = new Vector3(location.x - 500f, location.y, location.z-500f);
+		//locations used by terrain chunks are center of tile, whereas spawner is currently min x/z values (bottom left corner)
+		obstacleFactory.SetObstaclePositions(obstacleFactoryLocation, obstacles);
+	}
+
 	public void MakePlane(){
-		float mapScale = transform.localScale.x;
-		Vector2 chunkXY = new Vector2 (transform.position.x, transform.position.z);
-		float globalCellSize = cellSize * mapScale;
+		float mapScale = transform.localScale.x; 
+		Vector2 chunkXY = new Vector2 (transform.position.x, transform.position.z); 
+		threadForTerrainGen = new Thread(() => ThreadedTerrainGen(mapScale, chunkXY));
+		threadForTerrainGen.Start();
+		StartCoroutine("CheckForThreadComplete");
+		
+
+        
+	}
+	
+	IEnumerator CheckForThreadComplete (){
+		//can get rid of this once make a List<action> functions to run on main thread, thread pooling system on gamemanager singleton
+		//put update mesh in the function to call on main thread
+		while (threadForTerrainGen.IsAlive){
+
+			yield return null;
+		}
+		UpdateMesh();
+	}
+
+	public void ThreadedTerrainGen (float mapScale, Vector2 chunkXY){
+				float globalCellSize = cellSize * mapScale;
 		int gridSize = (sizeX / (int)cellSize) * (sizeY / (int)cellSize);
 
 		vertices = new Vector3[gridSize * 6];
 		triangles = new int[vertices.Length];
 		uvs = new Vector2[vertices.Length];
-		colorMap = new Color[gridSize];
-
-        //this is for obstacle spawning so using non-skewed Y and Z axis (are switched for terrain gen because was 2d)
-        Vector3 chunkXYZ = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+		colorMap = new Color[gridSize]; 
 
         for (int w = 0; w < triangles.Length; w++) {
 			//setting triangles -- super easy because vertices are produced in order & triangle.length = vertices.length
@@ -79,7 +108,7 @@ public class GenDiscreteNormMesh : MonoBehaviour {
 
 				//get heights for the current quad
 
-				float[] quadHeights = noiseGenerator.QuadHeights((x * mapScale), (y * mapScale), chunkXY, globalCellSize);
+				float[] quadHeights = noiseGenerator.QuadHeights((x * mapScale), (y * mapScale), chunkXY, globalCellSize); //noise gen here
 
 				//sets vertices w/ heights -- these are set in order used in triangles
 				vertices[v] = new Vector3(x, quadHeights[0], y);
@@ -112,11 +141,7 @@ public class GenDiscreteNormMesh : MonoBehaviour {
 				quad++;
 			}
 		}
-        UpdateMesh();
-
-        obstacleFactory.SetObstaclePositions();
 	}
-		
 
 	void UpdateMesh (){
 		mesh.Clear ();

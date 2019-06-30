@@ -57,7 +57,7 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RenderingLayerMask: 4294967295
   m_Materials:
-  - {fileID: 2100000, guid: 0e53d6e60ad347945822dddb89c442a6, type: 2}
+  - {fileID: 2100000, guid: 5b976ba5fa2694109ab9e27ad519f57c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -105,7 +105,7 @@ MonoBehaviour:
   type: 0
   active: 0
   obstacleType: 0
-  scaleRangeType: {x: 0.5, y: 3}
-  spawnLocationType: 0
-  standardSpawnQuantity: 200
-  activeQuantityType: 100
+  type_ScaleRange: {x: 15, y: 120}
+  type_SpawnLocation: 0
+  type_SpawnQuantity: 200
+  type_ActiveQuantity: 50

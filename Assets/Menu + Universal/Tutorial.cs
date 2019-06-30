@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Tutorial : MonoBehaviour {
 
-    TextNode tutorialNodeLabel;
+    TextNode mainNode;
 	void Start () 
     {
-        tutorialNodeLabel = GameText.generator.CreateTextNode("TUTORIAL", "Button", gameObject.transform, new Vector3(0f, 2f, 0f), Vector3.zero, MoreText);	
+        mainNode = GameText.generator.CreateNode("TUTORIAL", GameText.generator.style_Button, gameObject.transform, new Vector3(0f, 2f, 0f), Vector3.zero, MoreText);	
 	}
 	
 	// Update is called once per frame
@@ -17,8 +17,8 @@ public class Tutorial : MonoBehaviour {
 
     void MoreText()
     {
-        Destroy(tutorialNodeLabel.gameObject);
-        TextNode more = GameText.generator.CreateTextNode("MOREMOREMORE~TEXT", "LabelText", gameObject.transform, new Vector3(0f, 2f, 0f));
+        mainNode.TextStyle = GameText.generator.style_LabelText;
+        mainNode.Message = "NEW MESSAGE";
     }
     
 }

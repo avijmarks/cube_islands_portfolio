@@ -27,7 +27,7 @@ public class GameText: MonoBehaviour {
     public static GameText generator = null;
 
     //used to store styles created with CreateGameTextStyleFunction
-    Dictionary<string, GameTextStyle> gameTextStyles = new Dictionary<string, GameTextStyle>();
+    public Dictionary<string, GameTextStyle> gameTextStyles = new Dictionary<string, GameTextStyle>();
 
     //used to set trigger method on button click
     public delegate void GameTextButtonTrigger();
@@ -37,40 +37,43 @@ public class GameText: MonoBehaviour {
     //GAMESTYLE CLASS AND CONSTRUCTOR
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    //ADD CUSTOM TEXT STYLES HERE
-    void MyTextStyles()
-    {
-        NewGameTextStyle("LabelText", .9f, 1, false, false, false);
-        NewGameTextStyle("Button", .6f, 1, true, false, false);
-        NewGameTextStyle("HUDMenuLabel", .1f, 1, false, false, true);
-        NewGameTextStyle("HUDButton", .07f, 1, true,false,true);
-    }
+    //ADD CUSTOM TEXT STYLES HERE -- MAKE SURE TO INITIALIZE IN AWAKE
+    [SerializeField]
+    public GameTextStyle style_LabelText;
+    public GameTextStyle style_Button;
+    public GameTextStyle style_HUDMenuLabel;
+    public GameTextStyle style_HUDButton;
+    
+    
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     public class GameTextStyle : MonoBehaviour
     {
         public float textSize;
-        public int material;
+        public int materialNumber;
         public string styleName;
         public bool isButton;
         public bool lookAtPlayer;
         public bool isParented;
-    }
 
-    //basic constructor for new text styles
-    public void NewGameTextStyle(string styleName, float textSize, int textMaterial, bool isButton, bool lookAtPlayer, bool isParented)
-    {
-        GameTextStyle newStyle = new GameTextStyle();
-        newStyle.styleName = styleName;
-        newStyle.textSize = textSize;
-        newStyle.material = textMaterial;
-        newStyle.isButton = isButton;
-        newStyle.lookAtPlayer = lookAtPlayer;
-        newStyle.isParented = isParented;
-
-        gameTextStyles.Add(styleName, newStyle);
+        public GameTextStyle (string _styleName, float _textSize, int _textMaterialNumber, bool _isButton, bool _lookAtPlayer, bool _isParented)
+        {
+            //constructor for new text styles
+            styleName = _styleName;
+            textSize = _textSize;
+            materialNumber = _textMaterialNumber;
+            isButton = _isButton;
+            lookAtPlayer = _lookAtPlayer;
+            isParented = _isParented;
+        }
     }
+    
+
+    
+    
+   
+
 
 
 
@@ -91,6 +94,7 @@ public class GameText: MonoBehaviour {
     //creates a dictionary for us of alphabet prefabs and characters by accessing each index of prefab array and finding out its string character variable
     void Awake()
     {
+        
         if (generator == null)
         {
             generator = this; 
@@ -104,7 +108,12 @@ public class GameText: MonoBehaviour {
         {
             characters.Add(initializer[i].characterID, initializer[i]);
         }
-        MyTextStyles();
+
+        //MAKE SURE TO ADD CUSTOM BASE STYLES HERE
+        style_LabelText = new GameTextStyle("LabelText", .9f, 1, false, false, false);
+        style_Button = new GameTextStyle("Button", .6f, 1, true, false, false);
+        style_HUDMenuLabel = new GameTextStyle("HUDMenuLabel", .1f, 1, false, false, true);
+        style_HUDButton =  new GameTextStyle("HUDButton", .07f, 1, true,false,true);
     }
 
     GameTextCharacter[] InitialArray()
@@ -123,99 +132,117 @@ public class GameText: MonoBehaviour {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     //message = self explanatory; textSize & material = choose from array in inspector; rotOffset in case instantiating object has weird rot; 
-    public TextNode CreateTextNode(string message, string style, Transform parentTransform, Vector3 positionOffset, Vector3 rotationOffset, GameTextButtonTrigger trigger = null)
+    //************************************************************ */
+    public TextNode CreateNode(string message, GameTextStyle style, Transform parentTransform, Vector3 positionOffset, Vector3 rotationOffset, 
+                                                                                                                GameTextButtonTrigger trigger = null)
     {
-       
-        //instantiate textNode ( will be parent of characters)
-        TextNode nodeInstance = Instantiate(textNodePrefab);
         
-        //rotation offset used here because characters position and rotation will always be same relative to textNode, it is textNode that controls overal rotation
-        nodeInstance.transform.Rotate(parentTransform.rotation.eulerAngles + rotationOffset);
-
-        if (gameTextStyles[style].isParented == true)
-        {
-            nodeInstance.transform.SetParent(parentTransform);
-            nodeInstance.transform.localPosition = positionOffset;
-            
-        } else {
-            nodeInstance.transform.position = parentTransform.transform.TransformPoint(positionOffset);
-            
-        }
-
-        nodeInstance = ChangeNodeMessage(nodeInstance, message, style, trigger);
+        TextNode nodeInstance = Instantiate(textNodePrefab);
+        nodeInstance.InitializeNode(message, style, parentTransform, positionOffset, rotationOffset, trigger);
+        //sets transform hierarchy position, position, and rotation
+        SetNodeTransform(nodeInstance);
+        //changes message and sets prefab array on textnode
+        ChangeMessage(nodeInstance);
+        //changes material (integer index for array)
+        ChangeTextMaterial(nodeInstance);
+        //changes textsize (based on number not array index)
+        ChangeTextSize(nodeInstance);
+        //self explanatory -- creates button size depends on message array size already being correct
+        ChangeIsButton(nodeInstance);
         return nodeInstance;
     }
-    public TextNode CreateTextNode(string message, string style, Transform parentTransform, Vector3 positionOffset)
+    public void SetNodeTransform(TextNode node)
     {
-
-
-        TextNode instance = CreateTextNode(message, style, parentTransform, positionOffset, Vector3.zero);
-        return instance;
+        ResetNode(node);
+        node.transform.Rotate(node.ParentTransform.rotation.eulerAngles + node.RotationOffset);
+        //unparenting so position can be set regardless of hierarchy position.
+        node.transform.SetParent(node.transform);
+        node.transform.position = node.ParentTransform.transform.TransformPoint(node.PositionOffset);
+        if (node.IsParented == true)
+        {
+            node.transform.SetParent(node.ParentTransform);
+        }
     }
 
-
-    //Changes message on textnode -- also used when initially creating node
-    public TextNode ChangeNodeMessage(TextNode nodeInstance, string message, string style, GameTextButtonTrigger trigger)
+    public void ChangeMessage(TextNode node)
     {
-        //getting rid of old text/button (if any)
-        if (nodeInstance.GetComponentsInChildren<GameTextCharacter>().Length > 0)
+        if (node.GetComponentsInChildren<GameTextCharacter>().Length > 0)
         {
-            GameTextCharacter[] previousCharacters = nodeInstance.GetComponentsInChildren<GameTextCharacter>();
-            for (int i = 0; i <= previousCharacters.Length; i++)
+            GameTextCharacter[] previousCharacters = node.GetComponentsInChildren<GameTextCharacter>();
+            for (int i = 0; i < previousCharacters.Length; i++)
             {
-                Destroy(previousCharacters[i]);
+                Destroy(previousCharacters[i].gameObject);
             }
-            if (nodeInstance.GetComponentsInChildren<ButtonPad>().Length > 0)
+            ButtonPad previousPad = node.GetComponentInChildren<ButtonPad>();
+            if (previousPad != null) 
             {
-                ButtonPad[] oldButtons = nodeInstance.GetComponentsInChildren<ButtonPad>();
-                Destroy(oldButtons[0]);
+                Destroy(previousPad.gameObject);
             }
+        
         }
 
-        nodeInstance.textStyle = style;
-
-        char[] messageArray = message.ToCharArray();
-        Vector3[] characterLocalPositions = GetCharacterPositions(nodeInstance.transform, gameTextStyles[style].textSize, messageArray);
-
-        for (int i = 0; i < messageArray.Length; i++)
+        char[] messageArray = node.Message.ToCharArray();
+        Vector3[] characterLocalPositions = GetCharacterPositions(node.transform, node.TextSize, messageArray);
+        GameTextCharacter[] prefabArray = new GameTextCharacter[messageArray.Length];
+         for (int i = 0; i < messageArray.Length; i++)
         {
-            GameTextCharacter instance = Instantiate(characters[messageArray[i]], nodeInstance.transform);
+            GameTextCharacter instance = Instantiate(characters[messageArray[i]], node.transform);
             instance.transform.localPosition = characterLocalPositions[i];
 
             instance.transform.Rotate(0, 90, 90);
-            instance.GetComponent<MeshRenderer>().material = materials[gameTextStyles[style].material];
-            instance.transform.localScale = new Vector3(gameTextStyles[style].textSize, gameTextStyles[style].textSize, gameTextStyles[style].textSize);
+            
+            prefabArray[i] = instance;
         }
+        node.PrefabArray = prefabArray;
+    }
+    public void ChangeTextMaterial (TextNode node)
+    {
+        int prefabMat = node.TextMaterialNumber;
+        for (int i = 0; i < node.PrefabArray.Length; i++)
+        {
+            node.PrefabArray[i].GetComponent<MeshRenderer>().material = materials[prefabMat];
+        }
+    }
 
+    public void ChangeTextSize (TextNode node)
+    {
+        for (int i = 0; i < node.PrefabArray.Length; i++)
+        {
+            GameTextCharacter character = node.PrefabArray[i];
+            character.transform.localScale = new Vector3(node.TextSize, node.TextSize, node.TextSize);
+        }
+    }
 
-        if (gameTextStyles[style].isButton)
+    public void ChangeIsButton(TextNode node)
+    {
+        //creates button pad prefab instance and sets size based on TextSize
+        if (node.GetComponentsInChildren<ButtonPad>().Length > 0)
+        {
+            ButtonPad[] oldButtons = node.GetComponentsInChildren<ButtonPad>();
+            Destroy(oldButtons[0]);
+        }
+        char[] messageArray = node.Message.ToCharArray();
+        if (node.IsButton)
         {
             float buttonScale = .3f;
-            nodeInstance.buttonPad = Instantiate(buttonPadPrefab, nodeInstance.transform);
-            nodeInstance.buttonPad.trigger = trigger;
-            nodeInstance.buttonPad.textStyle = style;
-            nodeInstance.buttonPad.node = nodeInstance;
-            nodeInstance.buttonPad.transform.localPosition = new Vector3(0, 0, -(.05f * gameTextStyles[style].textSize));
+            node.buttonPad = Instantiate(buttonPadPrefab, node.transform);
+            node.buttonPad.trigger = node.trigger;
+            node.buttonPad.textStyle = node.TextStyle;
+            node.buttonPad.node = node;
+            node.buttonPad.transform.localPosition = new Vector3(0, 0, -(.05f * node.TextSize));
 
-            float charactarSpace = gameTextStyles[style].textSize * .7f;
+            float charactarSpace = node.TextStyle.textSize * .7f;
             float X = (charactarSpace * messageArray.Length) + (buttonScale * charactarSpace);
             float Y = charactarSpace + (buttonScale * charactarSpace);
             float Z = (.05f * charactarSpace);
-            nodeInstance.buttonPad.transform.localScale = new Vector3(X, Y, Z);
-
-            //setting properties on TextNode instance
-            nodeInstance.trigger = trigger;
+            node.buttonPad.transform.localScale = new Vector3(X, Y, Z); 
         }
-        //setting style property on TextNode instance
 
-
-
-        return nodeInstance;
     }
 
-
-    //uses textSize, messageArray.Length, and textNode position to calculate the localpositions (to textNode) where chars go (returns a vector3[] of positions) 
-    Vector3[] GetCharacterPositions(Transform nodeTransform, float textSize, char[] messageArray)
+//uses textSize, messageArray.Length, and textNode position to calculate the localpositions (to textNode) where chars go 
+//(returns a vector3[] of positions) 
+      Vector3[] GetCharacterPositions(Transform nodeTransform, float textSize, char[] messageArray)
     {
         Vector3[] characterPositions = new Vector3[messageArray.Length];
 
@@ -240,10 +267,18 @@ public class GameText: MonoBehaviour {
         return characterPositions;
     }
 
+    void ResetNode(TextNode node)
+    {
+        node.transform.localScale = new Vector3(1f, 1f, 1f);
+        Quaternion originRot = node.transform.rotation;
+        originRot.eulerAngles = Vector3.zero;
+        node.transform.rotation = originRot;
+        //stop node look at coroutine HERE
+    }
+
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     //BUTTON EVENTS
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
     public void PointerOnButton(ButtonPad buttonInstance)
     {
         StartCoroutine(ButtonHover(buttonInstance)); 
@@ -257,7 +292,7 @@ public class GameText: MonoBehaviour {
         float moveVel = 0.0f;
         float moveSpeed = 4.0f;
         float current = 0f;
-        float target = .25f * gameTextStyles[buttonInstance.textStyle].textSize;
+        float target = .25f * buttonInstance.textStyle.textSize;
         
         Vector3 newPos;
 
@@ -297,7 +332,7 @@ public class GameText: MonoBehaviour {
         float moveVel = 0.0f;
         float moveSpeed = 4.0f;
         float current = 0f;
-        float target = .25f * gameTextStyles[buttonInstance.textStyle].textSize;
+        float target = .25f * buttonInstance.textStyle.textSize;
         while (current < target-.01f)
         {
             Color color = buttonInstance.GetComponent<MeshRenderer>().material.color;
@@ -336,18 +371,5 @@ public class GameText: MonoBehaviour {
         StopAllCoroutines();
         buttonInstance.trigger();
     }
-
-    
-
-
-
-
-
-
-  
-    
-
-
-
 
 }

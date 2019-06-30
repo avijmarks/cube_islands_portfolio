@@ -29,8 +29,6 @@ public class TerrainChunkManager : MonoBehaviour {
 
 
 
-
-	
 	void Start () {
         StartState();
 	}
@@ -47,6 +45,7 @@ public class TerrainChunkManager : MonoBehaviour {
         //setting first terrain chunk's position and pooling
         Terrain1.TerrainPosition.transform.position = new Vector3(0f, 0f, 500);
         Terrain1.Generator.MakePlane();
+        Terrain1.Generator.GenObstacles(new Vector3(0f, 0f, 500));
         Pool.Enqueue(Terrain1);
     }
 
@@ -56,13 +55,12 @@ public class TerrainChunkManager : MonoBehaviour {
         TerrainData NewTerrain = Pool.Dequeue();
         NewTerrain.TerrainPosition.transform.position = location;
         NewTerrain.Generator.MakePlane();
+        NewTerrain.Generator.GenObstacles(location);
         Pool.Enqueue(NewTerrain);
         /*
         NewTerrain.collider.sharedMesh = null;
         NewTerrain.collider.sharedMesh = NewTerrain.mesh.mesh;
         */       
-        
-        Debug.Log(Pool.Peek());
     }
 
     public void setTerrainCollider(TerrainData currentTerrain) {

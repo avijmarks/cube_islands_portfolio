@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 
 public class ButtonPad : EventTrigger {
 
-    public string textStyle;
+    public GameText.GameTextStyle textStyle;
     public GameText.GameTextButtonTrigger trigger;
 
     public TextNode node;

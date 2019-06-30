@@ -20,10 +20,6 @@ public class TileManager : MonoBehaviour {
     //TERRAIN CHUNK STUFF
     public TerrainChunkManager terrainManager;
 
-
-
-   
-
     private void FixedUpdate()
     {
         positionInTile = Mathf.InverseLerp(boundaryManager.dimensionsCurrent.Start[direction], boundaryManager.dimensionsCurrent.End[direction], transform.position[direction]);
