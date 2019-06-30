@@ -244,12 +244,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
-  obstacleFactory: {fileID: 0}
   cellSize: 2
   sizeX: 100
   sizeY: 100
   testing: 0
   cellLoadTime: 0.1
+  obstacleFactory: {fileID: 0}
 --- !u!23 &131320160
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -381,6 +381,7 @@ GameObject:
   m_Component:
   - component: {fileID: 288806357}
   - component: {fileID: 288806356}
+  - component: {fileID: 288806358}
   m_Layer: 0
   m_Name: MapGenerator
   m_TagString: Untagged
@@ -432,8 +433,27 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &288806358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 288806355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9837fad78aadf4666a60f8d84a2066a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  regularPrefab: {fileID: 114569156794606160, guid: 86c6f14b277ab4c369704a2220429290,
+    type: 2}
+  mediumPrefab: {fileID: 114869528062617558, guid: bae95143ad3724608abae4c1455ee40e,
+    type: 2}
+  thickPrefab: {fileID: 114657162789083388, guid: 132ccfc4262e24c7488f6b01371c256d,
+    type: 2}
+  obstacleData: []
+  terrainXYSize: 1000
 --- !u!1 &336657420
 GameObject:
   m_ObjectHideFlags: 0
@@ -507,7 +527,7 @@ Transform:
   - {fileID: 2101862728}
   - {fileID: 1532315679}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 45, z: 0}
 --- !u!1 &338491624
 GameObject:
@@ -713,7 +733,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &438920135
 GameObject:
@@ -832,7 +852,7 @@ Transform:
   - {fileID: 1016982038}
   - {fileID: 1562506169}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &565051074
 GameObject:
@@ -898,7 +918,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &586122088
 Prefab:
@@ -1022,12 +1042,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
-  obstacleFactory: {fileID: 0}
   cellSize: 1
   sizeX: 100
   sizeY: 100
   testing: 0
   cellLoadTime: 0.1
+  obstacleFactory: {fileID: 0}
 --- !u!23 &588834039
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1381,6 +1401,109 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bc4f23d04e42f4b559542ad840db6530, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &901347282
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 901347287}
+  - component: {fileID: 901347286}
+  - component: {fileID: 901347285}
+  - component: {fileID: 901347284}
+  - component: {fileID: 901347283}
+  m_Layer: 0
+  m_Name: Terrain (4)
+  m_TagString: Untagged
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &901347283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 901347282}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8066d246bbf6e41059301fa75f9ebee3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &901347284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 901347282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de9b8bd7235e3489abf6cbce5821cd35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  noiseGenerator: {fileID: 288806356}
+  cellSize: 1
+  sizeX: 100
+  sizeY: 100
+  testing: 1
+  cellLoadTime: 0.1
+  obstacleFactory: {fileID: 288806358}
+--- !u!23 &901347285
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 901347282}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 4294967295
+  m_Materials:
+  - {fileID: 2100000, guid: 98cfaf78ee2dc470a985a17ee3eeefce, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &901347286
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 901347282}
+  m_Mesh: {fileID: 0}
+--- !u!4 &901347287
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 901347282}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &951609211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1510,12 +1633,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
-  obstacleFactory: {fileID: 0}
   cellSize: 1
   sizeX: 3
   sizeY: 3
   testing: 0
   cellLoadTime: 0.1
+  obstacleFactory: {fileID: 0}
 --- !u!23 &1016982041
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1819,7 +1942,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1233688437 stripped
 Transform:
@@ -1863,7 +1986,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 766346198, guid: 463285ecd6702471a909ba810832bf0e, type: 2}
       propertyPath: m_RootOrder
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 463285ecd6702471a909ba810832bf0e, type: 2}
@@ -1981,7 +2104,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1326980375
 GameObject:
@@ -2080,12 +2203,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
-  obstacleFactory: {fileID: 0}
   cellSize: 1
   sizeX: 100
   sizeY: 100
   testing: 1
   cellLoadTime: 0.1
+  obstacleFactory: {fileID: 0}
 --- !u!1 &1361384899
 GameObject:
   m_ObjectHideFlags: 0
@@ -2153,7 +2276,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1417757655
 GameObject:
@@ -2197,12 +2320,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
-  obstacleFactory: {fileID: 0}
   cellSize: 1
   sizeX: 100
   sizeY: 100
   testing: 0
   cellLoadTime: 0.1
+  obstacleFactory: {fileID: 0}
 --- !u!23 &1417757658
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2257,6 +2380,47 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1883170674}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1495082452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1495082454}
+  - component: {fileID: 1495082453}
+  m_Layer: 0
+  m_Name: KeepSceneViewOpen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1495082453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1495082452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d54c4d6f94f14c82a40aa06f5fa085a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  KeepSceneViewActive: 1
+--- !u!4 &1495082454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1495082452}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1532315678
 GameObject:
@@ -2447,12 +2611,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
-  obstacleFactory: {fileID: 0}
   cellSize: 1
   sizeX: 3
   sizeY: 3
   testing: 0
   cellLoadTime: 0.1
+  obstacleFactory: {fileID: 0}
 --- !u!23 &1562506172
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2532,7 +2696,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 498412, guid: 970dd4b9371394fb4890965f608d46fd, type: 2}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 970dd4b9371394fb4890965f608d46fd, type: 2}
@@ -2669,12 +2833,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noiseGenerator: {fileID: 288806356}
-  obstacleFactory: {fileID: 0}
   cellSize: 2
   sizeX: 100
   sizeY: 100
   testing: 0
   cellLoadTime: 0.1
+  obstacleFactory: {fileID: 0}
 --- !u!23 &1835040805
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2760,7 +2924,7 @@ Transform:
   - {fileID: 1417757660}
   - {fileID: 131320162}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1981858436
 GameObject:

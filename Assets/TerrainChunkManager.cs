@@ -47,6 +47,7 @@ public class TerrainChunkManager : MonoBehaviour {
         Terrain1.Generator.MakePlane();
         Terrain1.Generator.GenObstacles(new Vector3(0f, 0f, 500));
         Pool.Enqueue(Terrain1);
+        
     }
 
     public void NewChunk(Vector3 location) {
