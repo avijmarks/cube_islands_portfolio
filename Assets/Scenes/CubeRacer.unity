@@ -220,6 +220,7 @@ MonoBehaviour:
   thickPrefab: {fileID: 114657162789083388, guid: 132ccfc4262e24c7488f6b01371c256d,
     type: 2}
   obstacleData: []
+  terrainXYSize: 1000
 --- !u!1001 &37815492
 Prefab:
   m_ObjectHideFlags: 0
@@ -2015,7 +2016,7 @@ GameObject:
   - component: {fileID: 791905148}
   - component: {fileID: 791905147}
   m_Layer: 0
-  m_Name: MapGenerator
+  m_Name: TerrainMapSettings
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2049,6 +2050,7 @@ MonoBehaviour:
   octaves: 6
   lacunarity: 4.5
   persistance: 0.37
+  seedXY: {x: 0, y: 0}
   regions:
   - name: deep water
     height: -0.5
@@ -3444,6 +3446,11 @@ Prefab:
       propertyPath: obstacleFactory
       value: 
       objectReference: {fileID: 27786096}
+    - target: {fileID: 114931283451979410, guid: f7536cafbe68e4209a0dac61ed00f048,
+        type: 2}
+      propertyPath: noiseSettings
+      value: 
+      objectReference: {fileID: 791905148}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7536cafbe68e4209a0dac61ed00f048, type: 2}
   m_IsPrefabAsset: 0
@@ -3734,6 +3741,11 @@ Prefab:
       propertyPath: obstacleFactory
       value: 
       objectReference: {fileID: 27786096}
+    - target: {fileID: 114931283451979410, guid: f7536cafbe68e4209a0dac61ed00f048,
+        type: 2}
+      propertyPath: noiseSettings
+      value: 
+      objectReference: {fileID: 791905148}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f7536cafbe68e4209a0dac61ed00f048, type: 2}
   m_IsPrefabAsset: 0
@@ -3954,6 +3966,16 @@ Prefab:
       propertyPath: obstacleFactory
       value: 
       objectReference: {fileID: 27786096}
+    - target: {fileID: 114931283451979410, guid: f7536cafbe68e4209a0dac61ed00f048,
+        type: 2}
+      propertyPath: testing
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114931283451979410, guid: f7536cafbe68e4209a0dac61ed00f048,
+        type: 2}
+      propertyPath: noiseSettings
+      value: 
+      objectReference: {fileID: 791905148}
     m_RemovedComponents:
     - {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: f7536cafbe68e4209a0dac61ed00f048, type: 2}

@@ -21,7 +21,7 @@ public class TerrainChunkManager : MonoBehaviour {
     }
 
     //heightmap generator reference as needed
-    public NoiseGenerator heightMapGenerator;
+    public NoiseSettings heightMapGenerator;
 
     //pool
     public Queue<TerrainData> Pool = new Queue<TerrainData>();

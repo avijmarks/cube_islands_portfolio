@@ -7,9 +7,12 @@ using System.Threading;
 [RequireComponent(typeof(MeshRenderer))]
 public class GenDiscreteNormMesh : MonoBehaviour {
 	
+
+	
+	
 	Mesh mesh;
 	MeshRenderer meshRenderer;
-	public NoiseGenerator noiseSettings;
+	public NoiseSettings noiseSettings;
 
 	//mesh arrays
 	Vector3[] vertices;
@@ -44,6 +47,7 @@ public class GenDiscreteNormMesh : MonoBehaviour {
 		mesh = GetComponent<MeshFilter> ().mesh;
 		meshRenderer = GetComponent<MeshRenderer> ();
 		obstacles = obstacleFactory.GetObstacleArray();
+		
 	}
 
 
@@ -53,7 +57,7 @@ public class GenDiscreteNormMesh : MonoBehaviour {
             MakePlane();
         }
 		noiseGenerator = new NoiseGen(noiseSettings.maxHeight, noiseSettings.noiseScale, noiseSettings.useOctaves, noiseSettings.octaves, 
-									noiseSettings.lacunarity, noiseSettings.persistance);
+									noiseSettings.lacunarity, noiseSettings.persistance, noiseSettings.seedXY);
     }
 
 	public void GenObstacles (Vector3 location)
@@ -170,21 +174,21 @@ public class GenDiscreteNormMesh : MonoBehaviour {
 
 	public class NoiseGen {
 			//heightmap settings
-		public float maxHeight = 1f;
-		public float noiseScale = .1f;
-		public bool useOctaves = true;
-		public int octaves = 2;
+		float maxHeight = 1f;
+		float noiseScale = .1f;
+		bool useOctaves = true;
+		int octaves = 2;
 
 		//used to calculate frequency -- octave detail level
-		public float lacunarity = 2f;
+		float lacunarity = 2f;
 		//controls how strong effect of octaves is
-		public float persistance = .5f;
+		float persistance = .5f;
 
 		float xNoise = 0;
 		float yNoise = 0;
 		Vector2 seedXY;
 
-		public NoiseGen (float _maxHeight, float _noiseScale, bool _useOctaves, int _octaves, float _lacunarity, float _persistance)
+		public NoiseGen (float _maxHeight, float _noiseScale, bool _useOctaves, int _octaves, float _lacunarity, float _persistance, Vector2 _seedXY)
 		{
 			maxHeight = _maxHeight;
 			noiseScale = _noiseScale;
@@ -192,17 +196,9 @@ public class GenDiscreteNormMesh : MonoBehaviour {
 			octaves = _octaves;
 			lacunarity = _lacunarity;
 			persistance = _persistance;
-		}
-
-		
-
-		// Use this for initialization
-		void Awake () {
-			randomNoise ();
+			seedXY = _seedXY;
 		}
 		
-
-
 		public float[] QuadHeights (float x, float y, Vector2 chunkXY, float globalCellSize){
 
 			//+1s here will make the perlin scale remain consistent with an increase in gridcellsize currently, if want to change will need to feed scale into qheights function
@@ -271,15 +267,10 @@ public class GenDiscreteNormMesh : MonoBehaviour {
 					}
 				}
 			}
-
-
-
 			return heights;
+			
 		}
-		void randomNoise (){
-			seedXY.x = Random.Range (0, 1000);
-			seedXY.y = Random.Range (0, 1000);
-		}
+	
 	}
 
 }

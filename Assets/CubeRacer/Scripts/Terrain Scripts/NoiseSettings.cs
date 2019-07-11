@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NoiseSettings : MonoBehaviour {
+public class NoiseGenerator : MonoBehaviour {
 
 
 	//heightmap settings
@@ -22,11 +22,16 @@ public class NoiseSettings : MonoBehaviour {
 
 	public TerrainType[] regions;
 
+	  
+
+	// Use this for initialization
 	void Awake () {
-		//needs to be in Awake() so when constructor is called in MeshGen Start() (contructor passes setting data to instances of NoiseGen Class) it 
-		//actually gets the new random seed
+		//needs to be awake so when constructor is called in MeshGen Start() it actually gets the new random seed
 		randomNoise ();
 	}
+	
+
+
 	
 	void randomNoise (){
 		seedXY.x = Random.Range (0, 1000);

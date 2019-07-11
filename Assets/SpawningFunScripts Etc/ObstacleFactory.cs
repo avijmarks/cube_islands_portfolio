@@ -30,10 +30,14 @@ public class ObstacleFactory : MonoBehaviour {
 
         }
     }
-
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ObstacleTypeData regular_Obstacle;
     ObstacleTypeData medium_Obstacle;
     ObstacleTypeData thick_Obstacle;
+    ObstacleTypeData perlin_regular;
+    ObstacleTypeData perlin_thick;
+    ObstacleTypeData big_regular;
+    //~~~~~~~~~~~~~~~~~~~~~~~~~~~
     public Obstacle regularPrefab;
     public Obstacle mediumPrefab;
     public Obstacle thickPrefab;
@@ -59,15 +63,22 @@ public class ObstacleFactory : MonoBehaviour {
      private void SetTypeData (){
         //CONTRUCTORS FOR OBSTACLE TYPES GO HERE *MAKE SURE TO ADD THEM TO obstacleData
         
-        regular_Obstacle = new ObstacleTypeData(0, new Vector2(20f, 120f), 0, 100, 25, regularPrefab);
-        medium_Obstacle = new ObstacleTypeData(0, new Vector2(4f, 7f), 1, 75, 20, mediumPrefab);
-        thick_Obstacle = new ObstacleTypeData(0, new Vector2(20f, 50f), 0, 75, 15, thickPrefab);
+        regular_Obstacle = new ObstacleTypeData(0, new Vector2(20f, 80f), 0, 75, 14, regularPrefab);
+        medium_Obstacle = new ObstacleTypeData(0, new Vector2(13f, 45f), 0, 75, 10, mediumPrefab);
+        thick_Obstacle = new ObstacleTypeData(0, new Vector2(15f, 25f), 0, 75, 7, thickPrefab);
+        perlin_regular = new ObstacleTypeData(3, new Vector2(4f, 10f), 1, 75, 30, regularPrefab);
+        perlin_thick = new ObstacleTypeData(4, new Vector2(4f, 10f), 1, 75, 30, thickPrefab);
+        big_regular = new ObstacleTypeData(5, new Vector2(95f, 160f), 0, 20, 7, regularPrefab);
+        
         
 
         obstacleData = new List<ObstacleTypeData>();
         obstacleData.Add(regular_Obstacle);
         obstacleData.Add(medium_Obstacle);
         obstacleData.Add(thick_Obstacle);
+        obstacleData.Add(perlin_regular);
+        obstacleData.Add(perlin_thick);
+        obstacleData.Add(big_regular);
 
         randomNoise(); //getting a random noise xyz seed for perlin noise spawning
     }
